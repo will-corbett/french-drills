@@ -107,4 +107,6 @@ footer { margin-top: 22px; font-size: .8rem; color: var(--muted); }
   .rules .cols { grid-template-columns: 1fr; }
 }
 [hidden] { display: none !important; }
+.report { margin: 14px 0 0; font-size: .8rem; color: var(--muted); text-align: right; }
+.report .link { color: var(--muted); }
 .actions .primary { margin-left: auto; }

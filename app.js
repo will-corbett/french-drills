@@ -7,7 +7,8 @@
   const REVIEW_GAP = 4;       // sentences to wait before repeating a missed one
   const CLEAR_AFTER = 2;      // correct answers needed to retire a missed sentence
 
-  let save = { mode: 'choose', contrast: false, stats: { i: [0, 0], p: [0, 0] }, missed: {} };
+  const ISSUES = 'https://github.com/will-corbett/french-drills/issues/new';
+  let save = { mode: 'choose', contrast: false, stats: { i: [0, 0], p: [0, 0] }, missed: {}, reported: [] };
   try { save = Object.assign(save, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* fresh start */ }
   const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* private mode */ } };
 
@@ -20,9 +21,9 @@
   const noAgreement = (s) => norm(s).replace(/(e|s|es)$/, '');
 
   function pickNext() {
-    const pool = save.contrast ? all.filter((s) => s.mixed) : all;
+    const pool = all.filter((s) => (!save.contrast || s.mixed) && !save.reported.includes(s.id));
     const due = Object.keys(save.missed).map(Number)
-      .filter((id) => byId.has(id) && !recent.slice(-REVIEW_GAP).includes(id) && (!save.contrast || byId.get(id).mixed));
+      .filter((id) => byId.has(id) && !save.reported.includes(id) && !recent.slice(-REVIEW_GAP).includes(id) && (!save.contrast || byId.get(id).mixed));
     if (due.length && Math.random() < REVIEW_CHANCE) return byId.get(due[Math.floor(Math.random() * due.length)]);
     for (let n = 0; n < 50; n++) {
       const s = pool[Math.floor(Math.random() * pool.length)];
@@ -73,6 +74,7 @@
     $('english').hidden = true; $('english').textContent = item.en.join('  ·  ');
     $('hint').hidden = false; $('hint').textContent = 'Show English';
     $('verdict').hidden = true; $('source').hidden = true;
+    $('report').hidden = false; $('reported').hidden = true;
     $('accents').hidden = save.mode !== 'type';
     $('go').textContent = 'Check';
     refresh();
@@ -110,7 +112,7 @@
     if (allOk) {
       streak++;
       if (save.missed[id]) { if (--save.missed[id] <= 0) delete save.missed[id]; }
-    } else { streak = 0; save.missed[id] = CLEAR_AFTER; }
+    } else { streak = 0; if (!save.reported.includes(id)) save.missed[id] = CLEAR_AFTER; }
     persist();
     const v = $('verdict'); v.hidden = false; v.className = 'verdict ' + (allOk ? 'good' : 'bad'); v.textContent = '';
     v.append(allOk ? 'Correct' : (formOnly ? 'Not quite — check the form' : 'Not quite'));
@@ -146,6 +148,22 @@
 
   $('go').onclick = () => { if (checked) show(pickNext()); else if (!$('go').disabled) check(); };
   $('hint').onclick = () => { const e = $('english'); e.hidden = !e.hidden; $('hint').textContent = e.hidden ? 'Show English' : 'Hide English'; };
+  $('report').onclick = () => {
+    if (!current) return;
+    const full = current.p.map((x) => (typeof x === 'string' ? x : x.a)).join('');
+    const lines = ['**Sentence:** ' + full, '**English:** ' + current.en.join(' / '), ''];
+    for (const x of current.p) {
+      if (typeof x === 'string') continue;
+      lines.push(`- Original (${TENSE[x.t]}): \`${x.a}\` · generated other tense: \`${x.o}\` · prompt: \`${x.h}\``);
+    }
+    lines.push('', `Tatoeba: https://tatoeba.org/en/sentences/show/${current.id} · mode: ${save.mode}`, '', "**What's wrong:** ");
+    const url = ISSUES + '?title=' + encodeURIComponent('Sentence #' + current.id + ': ') + '&body=' + encodeURIComponent(lines.join('\n'));
+    window.open(url, '_blank', 'noopener');
+    if (!save.reported.includes(current.id)) save.reported.push(current.id);
+    delete save.missed[current.id];
+    persist(); renderStats();
+    $('report').hidden = true; $('reported').hidden = false;
+  };
   $('contrast').checked = save.contrast;
   $('contrast').onchange = (e) => { save.contrast = e.target.checked; persist(); show(pickNext()); };
   $('reset').onclick = () => {
@@ -154,7 +172,7 @@
   };
   document.querySelectorAll('[data-mode]').forEach((b) => { b.onclick = () => setMode(b.dataset.mode); });
   document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' || e.target.closest('.seg, .rules, footer, .pick, #hint')) return;
+    if (e.key !== 'Enter' || e.target.closest('.seg, .rules, footer, .pick, #hint, .report')) return;
     if (e.target.id === 'go') return; // the button handles its own Enter
     e.preventDefault(); $('go').click();
   });
