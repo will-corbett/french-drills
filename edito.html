@@ -22,9 +22,9 @@ function current() {
 async function decksFor(lesson) {
   await Promise.all(lessons.map(async (l) => { files[l.id] = files[l.id] || await getJSON(l.file); }));
   const mine = files[lesson.id].map((d) => Object.assign({}, d, { id: lesson.id + ':' + d.id,
-    items: d.items.map((it) => Object.assign({}, it, { head: d.label })) }));
+    items: d.items.map((it) => Object.assign({}, it, { head: it.head ? `${d.label} · ${it.head}` : d.label })) }));
   const everything = lessons.flatMap((l) => files[l.id].flatMap((d) => d.items.map((it) =>
-    Object.assign({}, it, { head: `${l.unit} · ${l.title} · ${d.label}` }))));
+    Object.assign({}, it, { head: `${l.unit} · ${l.title} · ${d.label}${it.head ? ' · ' + it.head : ''}` }))));
   return [...mine, { id: 'all-lessons', label: 'Révision : toutes les leçons', items: everything,
     info: lessons.length > 1 ? `Mixed review across all ${lessons.length} lessons so far.` : 'Mixed review of everything so far. More lessons will join this set as they are added.' }];
 }

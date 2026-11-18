@@ -8,6 +8,7 @@ it in LESSONS. The exercise sentences are written for this site; only the functi
 expressions themselves come from the textbook's summary tables.
 """
 import random
+import re
 
 from frtools import DATA, write_json
 
@@ -259,7 +260,254 @@ def u1_opinions():
     ])
 
 
-LESSONS = [u1_opinions]
+# --------------------------------------------------------------------------- unit 1, lesson 2
+BANK_BLANK = re.compile(r"\[\[([^\]]+)\]\]")
+
+
+def bank_parts(text, explain):
+    """Parse [[answer|alt|alt]] blanks; explain(key) gives the explanation."""
+    parts, pos = [], 0
+    for m in BANK_BLANK.finditer(text):
+        if m.start() > pos:
+            parts.append(text[pos:m.start()])
+        opts = m.group(1).split("|")
+        before = text[:m.start()].rstrip(" ")
+        cap = before == "" or before[-1] in ".!?\n"
+        parts.append(dict(a=opts[0], alt=opts[1:], x=explain(opts[0]), k=opts[0], cap=cap))
+        pos = m.end()
+    if pos < len(text):
+        parts.append(text[pos:])
+    return parts
+
+
+def u1_argumenter():
+    L = {
+        "idee": "Introduire une idée",
+        "cause": "Introduire un argument par une cause",
+        "cons": "Introduire un argument par une conséquence",
+        "ajout": "Ajouter un argument",
+        "ex": "Introduire un exemple",
+        "adm": "Admettre l'argument contraire avant de le réfuter",
+        "opp": "Marquer l'opposition",
+        "prec": "Préciser",
+        "ref": "Reformuler",
+        "soul": "Souligner, mettre en évidence",
+        "gen": "Généraliser",
+        "res": "Résumer",
+        "concl": "Conclure",
+        "indig": "Exprimer son indignation",
+    }
+    labels = list(L.values())
+    E = [
+        ("pour commencer", "idee", "to begin with"),
+        ("avant toute chose", "idee", "first and foremost"),
+        ("tout d'abord", "idee", "first of all"),
+        ("d'abord", "idee", "first"),
+        ("premièrement", "idee", "firstly"),
+        ("en premier lieu", "idee", "in the first place (formal)"),
+        ("car", "cause", "because, for: in the middle of the sentence, never at the start in careful writing"),
+        ("parce que", "cause", "because: + clause (à cause de + noun)"),
+        ("puisque", "cause", "since: the cause is presented as obvious or already known"),
+        ("en effet", "cause", "indeed, the fact is: explains or justifies the previous sentence"),
+        ("à cause de", "cause", "because of: + noun, usually for a negative cause (grâce à for a positive one)"),
+        ("donc", "cons", "so, therefore"),
+        ("de manière à", "cons", "so as to: + infinitive, the intended result"),
+        ("ainsi", "cons", "thus, in this way"),
+        ("par conséquent", "cons", "consequently (formal)"),
+        ("pour cela", "cons", "for that (purpose), to do so"),
+        ("de plus", "ajout", "moreover, in addition"),
+        ("en outre", "ajout", "furthermore (formal)"),
+        ("par ailleurs", "ajout", "besides, in another respect: adds a point about a different aspect"),
+        ("ensuite", "ajout", "next: adds the following argument"),
+        ("d'une part… d'autre part", "ajout", "on the one hand… on the other hand: two complementary arguments, not a contrast"),
+        ("non seulement… mais aussi", "ajout", "not only… but also"),
+        ("comme on peut le voir…", "ex", "as can be seen (in)…"),
+        ("en particulier", "ex", "in particular"),
+        ("tel que", "ex", "such as: agrees with the noun (tel, telle, tels, telles que)"),
+        ("par exemple", "ex", "for example"),
+        ("notamment", "ex", "notably, in particular"),
+        ("certes", "adm", "admittedly: concede, then refute with mais"),
+        ("bien que (+ subjonctif)", "adm", "although: always followed by the subjonctif"),
+        ("même si (+ indicatif)", "adm", "even if, even though: followed by the indicatif, never the subjonctif"),
+        ("mais", "opp", "but"),
+        ("alors que", "opp", "whereas, while: contrasts two facts"),
+        ("tandis que", "opp", "whereas, while: contrast, or two things happening at the same time"),
+        ("au contraire", "opp", "on the contrary: states the opposite of what precedes"),
+        ("pourtant", "opp", "yet, and yet: a surprising contradiction"),
+        ("en revanche", "opp", "on the other hand, by contrast"),
+        ("par contre", "opp", "on the other hand (informal equivalent of en revanche)"),
+        ("cependant", "opp", "however"),
+        ("néanmoins", "opp", "nevertheless (formal)"),
+        ("toutefois", "opp", "however, nonetheless (formal)"),
+        ("tout de même", "opp", "all the same, still"),
+        ("quand même", "opp", "all the same, still (more informal than tout de même)"),
+        ("à l'inverse", "opp", "conversely: presents the opposite case"),
+        ("à ce propos, il faut ajouter que", "prec", "in this regard, it should be added that"),
+        ("à ce sujet, on peut préciser que", "prec", "on this subject, we can specify that"),
+        ("en d'autres termes", "ref", "in other words"),
+        ("autrement dit", "ref", "in other words"),
+        ("c'est-à-dire", "ref", "that is (to say)"),
+        ("soulignons", "soul", "let us stress"),
+        ("il faut souligner", "soul", "it must be stressed (that)"),
+        ("remarquons", "soul", "let us note"),
+        ("il faut remarquer", "soul", "it should be noted (that)"),
+        ("on peut insister sur le fait que", "soul", "we can emphasise the fact that"),
+        ("d'une façon générale", "gen", "generally speaking"),
+        ("en général", "gen", "in general"),
+        ("globalement", "gen", "overall, on the whole"),
+        ("en règle générale", "gen", "as a general rule"),
+        ("en un mot", "res", "in a word"),
+        ("en résumé", "res", "in summary"),
+        ("pour résumer", "res", "to sum up"),
+        ("en bref", "res", "in short"),
+        ("en définitive", "concl", "ultimately, when all is said and done"),
+        ("finalement", "concl", "in the end, finally"),
+        ("en fin de compte", "concl", "all things considered, in the end"),
+        ("en conclusion", "concl", "in conclusion"),
+        ("pour terminer", "concl", "to finish, to end with"),
+        ("Je suis choqué(e). / Cela me choque. / C'est choquant !", "indig", "I'm shocked. / That shocks me. / It's shocking!"),
+        ("Je suis révolté(e) / indigné(e) / exaspéré(e) / outré(e) !", "indig", "I'm appalled / outraged / exasperated / scandalised!"),
+        ("Quel scandale !", "indig", "What a scandal! / It's outrageous!"),
+        ("Cela dépasse les limites !", "indig", "That goes too far!"),
+        ("C'en est trop !", "indig", "That's the last straw! / Enough is enough!"),
+        ("C'est inacceptable / révoltant / exaspérant !", "indig", "It's unacceptable / appalling / infuriating!"),
+    ]
+    fonctions = [classify_item(f"u1a-f{i}", expr, L[f], f"{L[f]}: {x}.", labels)
+                 for i, (expr, f, x) in enumerate(E)]
+
+    # explanations for blanks, keyed by the connector as written in the text
+    X = {e[0].split(" (")[0].split("…")[0]: f"{L[e[1]]}: {e[2]}." for e in E}
+    X.update({
+        "non seulement": X["non seulement"] if "non seulement" in X else
+        "Ajouter un argument: non seulement… mais aussi = not only… but also.",
+        "mais aussi": "Ajouter un argument: non seulement… mais aussi = not only… but also.",
+        "d'une part": "Ajouter un argument: d'une part… d'autre part = on the one hand… on the other; two complementary points.",
+        "d'autre part": "Ajouter un argument: second half of d'une part… d'autre part; it adds, it does not contrast.",
+        "tels que": "Introduire un exemple: tel que agrees with the noun it follows (tel, telle, tels, telles que).",
+        "révolté": "Exprimer son indignation: je suis révolté(e) / indigné(e) / outré(e) = I'm appalled, outraged.",
+        "c'est inacceptable": "Exprimer son indignation: c'est inacceptable / révoltant / choquant !",
+        "bien que": X["bien que"],
+    })
+
+    def explain(k):
+        k2 = k.lower()
+        if k2 not in X:
+            raise SystemExit(f"no explanation for {k!r}")
+        return X[k2]
+
+    T = [
+        ("Les pollinisateurs", ["tandis que", "à cause de"],
+         "[[avant toute chose|tout d'abord|pour commencer|en premier lieu]], rappelons que les insectes pollinisateurs, dont "
+         "les abeilles, contribuent à près des trois quarts des cultures alimentaires. Leur déclin menace [[donc|par conséquent|ainsi]] "
+         "directement notre alimentation. Les pesticides, [[en particulier|notamment]] les néonicotinoïdes, en sont l'une des "
+         "principales causes. [[certes]], les agriculteurs doivent protéger leurs récoltes, [[mais]] des solutions existent : "
+         "on peut [[par exemple|notamment]] planter des haies fleuries [[de manière à]] offrir aux insectes refuge et nourriture. "
+         "[[en définitive|en conclusion|finalement|en fin de compte]], protéger les pollinisateurs, c'est nous protéger nous-mêmes."),
+        ("Les zones humides", ["de manière à", "tel que"],
+         "Les zones humides sont souvent considérées comme des terrains inutiles. [[pourtant|cependant|toutefois|néanmoins]], "
+         "elles rendent des services essentiels. [[d'une part]], elles filtrent l'eau et la purifient ; [[d'autre part]], "
+         "elles limitent les inondations [[car|parce que|puisque]] elles absorbent l'eau comme des éponges. "
+         "[[en d'autres termes|autrement dit]], les détruire revient à supprimer une protection naturelle et gratuite. "
+         "[[soulignons|remarquons|il faut souligner|il faut remarquer]] qu'une grande partie d'entre elles a disparu en France "
+         "au cours du XXe siècle."),
+        ("Les forêts", ["de manière à", "tel que"],
+         "[[à cause de]] la déforestation, de nombreuses espèces perdent leur habitat. [[alors que|tandis que]] les forêts "
+         "tropicales couvrent une petite partie des terres émergées, elles abritent plus de la moitié des espèces terrestres "
+         "connues. [[bien que]] des programmes de reboisement existent, ils ne remplacent pas les forêts anciennes. "
+         "[[en effet]], une plantation récente n'offre pas la même diversité qu'une forêt primaire. "
+         "[[à l'inverse|en revanche]], protéger les forêts existantes coûte moins cher et donne des résultats immédiats. "
+         "[[en résumé|en bref|en un mot|pour résumer]] : mieux vaut préserver que replanter."),
+        ("La pêche", ["bien que", "à cause de"],
+         "[[en règle générale|en général|d'une façon générale|globalement]], les poissons que nous mangeons proviennent de "
+         "stocks de plus en plus fragiles. La pêche industrielle vide les océans, [[car|puisque|parce que]] les bateaux "
+         "capturent plus de poissons que les espèces ne peuvent en renouveler. [[à ce propos, il faut ajouter que|à ce sujet, "
+         "on peut préciser que]] de nombreux animaux sont pris par erreur dans les filets, [[tels que]] les dauphins ou les "
+         "tortues. Ces captures menacent [[non seulement]] des espèces protégées, [[mais aussi]] l'équilibre de tout "
+         "l'écosystème. [[en conclusion|en définitive|pour terminer|finalement|en fin de compte]], consommer moins de "
+         "poisson, et mieux le choisir, devient une nécessité."),
+        ("Prise de parole · Journée mondiale de la biodiversité", ["à cause de", "de manière à"],
+         "Mesdames et Messieurs, [[pour commencer|tout d'abord|avant toute chose]], je voudrais vous dire à quel point je suis "
+         "[[révolté]] par l'indifférence face au déclin de la biodiversité. On nous répète que la situation s'améliore. "
+         "[[pourtant|cependant|toutefois|néanmoins]], environ un million d'espèces sont aujourd'hui menacées d'extinction. "
+         "[[c'est inacceptable]] ! [[certes]], chacun fait des petits gestes, [[mais]] cela ne suffit pas : il faut "
+         "[[en outre|de plus|par ailleurs]] que les États prennent des décisions fortes. [[en un mot|en bref|en résumé|pour résumer]], "
+         "il est temps d'agir."),
+    ]
+    textes = [dict(id=f"u1a-t{i}", layout="bank", ctx="Placez les mots manquants.", head=title, bank=bank,
+                   p=bank_parts(text, explain)) for i, (title, bank, text) in enumerate(T)]
+
+    P = [  # sentence with ___, answer, wrong options, explanation key or text, review key
+        ("___ les arbres absorbent du CO2, la déforestation aggrave le réchauffement.", "Puisque",
+         ["Bien que", "De manière à"], "puisque", None),
+        ("Bien que cette espèce ___ protégée, elle continue de décliner.", "soit", ["est", "sera"],
+         "Bien que is always followed by the subjonctif.", "bien que + subjonctif"),
+        ("Même si cette espèce ___ protégée, elle continue de décliner.", "est", ["soit", "serait"],
+         "Même si is followed by the indicatif, never the subjonctif.", "même si + indicatif"),
+        ("Bien que les ONG ___ l'alerte depuis des années, rien ne change.", "aient donné", ["ont donné", "donneront"],
+         "Bien que + subjonctif, here the subjonctif passé (aient donné).", "bien que + subjonctif"),
+        ("Même si les scientifiques ___ l'alerte depuis des années, rien ne change.", "donnent", ["aient donné", "donneraient"],
+         "Même si + indicatif (here the présent).", "même si + indicatif"),
+        ("Il faut réduire les pesticides ___ protéger les pollinisateurs.", "de manière à", ["bien que", "à cause de"],
+         "de manière à", None),
+        ("Certains animaux, ___ le loup ou le lynx, reviennent dans nos montagnes.", "tels que", ["tel que", "telles que"],
+         "Tel que agrees with the noun: animaux is masculine plural, so tels que.", "tel que (accord)"),
+        ("Certaines espèces, ___ la loutre, sont réapparues dans nos rivières.", "telles que", ["tels que", "telle que"],
+         "Tel que agrees with the noun it follows: espèces is feminine plural, so telles que.", "tel que (accord)"),
+        ("La ville a planté des arbres dans les rues ; ___, la température y a baissé en été.", "par conséquent",
+         ["certes", "en revanche"], "par conséquent", None),
+        ("Les villes s'étendent, ___ les espaces naturels reculent.", "tandis que", ["car", "de manière à"], "tandis que", None),
+        ("Le loup est protégé dans l'Union européenne. ___, certains éleveurs demandent le droit de l'abattre.", "Toutefois",
+         ["Par conséquent", "Par exemple"], "toutefois", None),
+        ("___, le recyclage ne suffit pas, mais il reste utile.", "Certes", ["Car", "Par exemple"], "certes", None),
+        ("Les haies abritent ___ des oiseaux, mais aussi des insectes et des petits mammifères.", "non seulement",
+         ["en revanche", "à cause de"], "non seulement", None),
+        ("La biodiversité, ___ la diversité du vivant sur Terre, est menacée.", "c'est-à-dire", ["par conséquent", "car"],
+         "c'est-à-dire", None),
+        ("___ la pollution, de nombreux poissons meurent.", "À cause de", ["Parce que", "De manière à"],
+         "À cause de + noun; parce que + clause.", "à cause de / parce que"),
+        ("De nombreux poissons meurent ___ l'eau est polluée.", "parce que", ["à cause de", "tel que"],
+         "Parce que + clause; à cause de + noun.", "à cause de / parce que"),
+        ("Les zones humides limitent les inondations. ___, elles absorbent l'eau comme des éponges.", "En effet",
+         ["Ainsi", "Certes"], "en effet", None),
+        ("___, les espèces menacées vivent dans des milieux fragiles.", "En règle générale", ["Par conséquent", "Certes"],
+         "en règle générale", None),
+        ("Nous avons parlé des forêts, des océans et des sols. ___ : tout est lié.", "En un mot", ["En effet", "Par exemple"],
+         "en un mot", None),
+        ("Voilà pour mes arguments. ___, je dirais que chacun peut agir à son échelle.", "Pour terminer",
+         ["Avant toute chose", "En particulier"], "pour terminer", None),
+        ("Les chats domestiques chassent beaucoup d'oiseaux. ___, il faut ajouter qu'ils chassent aussi les lézards.",
+         "À ce propos", ["Bien que", "Par contre"], "à ce propos, il faut ajouter que", None),
+        ("Le projet a été très critiqué ; il a ___ été adopté.", "tout de même", ["car", "tel que"], "tout de même", None),
+        ("La forêt amazonienne recule, ___ certaines forêts européennes progressent.", "alors que",
+         ["car", "de manière à"], "alors que", None),
+        ("Les insectes sont menacés ; ___, les abeilles sauvages disparaissent à un rythme inquiétant.", "en particulier",
+         ["à l'inverse", "bien que"], "en particulier", None),
+        ("Les sols sont vivants ; il faut ___ éviter de les tasser et de les polluer.", "donc", ["certes", "pourtant"],
+         "donc", None),
+        ("Les grandes cultures appauvrissent les sols. ___, les prairies naturelles les enrichissent.", "À l'inverse",
+         ["Ensuite", "En effet"], "à l'inverse", None),
+        ("La chasse est réglementée ; ___, des braconniers tuent encore des animaux protégés.", "néanmoins",
+         ["ainsi", "en général"], "néanmoins", None),
+        ("Les abeilles disparaissent. ___, sans elles, beaucoup de fruits ne pourraient plus pousser.", "Soulignons que",
+         ["Bien que", "À cause de"], "soulignons", None),
+    ]
+    phrases = []
+    for i, (sent, a, wrong, xk, key) in enumerate(P):
+        before, after = sent.split("___")
+        x = X.get(xk.lower(), xk) if xk.lower() in X else xk
+        phrases.append(dict(id=f"u1a-p{i}", layout="list", p=[before, dict(a=a, o=wrong, x=x, k=key or a.lower()), after]))
+
+    return dict(id="u1-argumenter", unit="Unité 1", title="Argumenter (p. 20)", decks=[
+        dict(id="fonctions", label="Fonctions", items=fonctions,
+             info="What does each connector do in an argument? Includes the « Exprimer son indignation » box."),
+        dict(id="textes", label="Placez les mots", items=textes,
+             info="Fill the blanks from the word bank. Some blanks accept more than one connector."),
+        dict(id="phrases", label="Quel connecteur ?", items=phrases,
+             info="One blank per sentence, including bien que / même si, à cause de / parce que and tel que."),
+    ])
+
+
+LESSONS = [u1_opinions, u1_argumenter]
 
 
 def main():
