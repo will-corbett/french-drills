@@ -172,15 +172,14 @@
   };
   document.querySelectorAll('[data-mode]').forEach((b) => { b.onclick = () => setMode(b.dataset.mode); });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && e.target.closest('.pick') && !checked) {
-      // Enter on a chosen answer button checks it instead of clicking the button again
-      e.preventDefault();
-      if (!$('go').disabled) $('go').click();
-      return;
-    }
-    if (e.key !== 'Enter' || e.target.closest('nav, .seg, .rules, footer, .pick, #hint, .report')) return;
-    if (e.target.id === 'go') return; // the button handles its own Enter
-    e.preventDefault(); $('go').click();
+    if (e.key !== 'Enter' || e.metaKey || e.ctrlKey || e.altKey) return;
+    // Enter always checks, then goes to the next sentence, wherever focus is in the drill;
+    // page controls (navigation, mode buttons, rules, footer, report link) keep their own Enter.
+    const t = e.target;
+    if (t.closest && t.closest('nav, header, footer, details, .report, a, select')) return;
+    e.preventDefault();
+    if (e.repeat) return; // holding Enter must not skip several sentences
+    if (!$('go').disabled) $('go').click();
   });
   for (const ch of 'é è ê à â ç î ô ù û ë ï œ'.split(' ')) {
     const b = document.createElement('button'); b.type = 'button'; b.textContent = ch; b.tabIndex = -1;

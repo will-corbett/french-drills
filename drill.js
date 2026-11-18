@@ -350,14 +350,16 @@ window.Drill = (() => {
     document.addEventListener('keydown', (e) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === 'Enter') {
-        // Enter on a chosen answer button checks it instead of clicking the button again
-        if (e.target.closest('.pick, .opt') && !checked) {
-          e.preventDefault();
-          if (!$('go').disabled) $('go').click();
-          return;
-        }
-        if (e.target.closest('nav, .seg, .controls, footer, .pick, #hint, .reportwrap, .opt, .chip, .slot, details') || e.target.id === 'go') return;
-        e.preventDefault(); $('go').click(); return;
+        // Enter always checks, then goes to the next item, wherever focus is in the drill.
+        // Exceptions: page controls keep their own Enter, and a word-bank chip or slot still
+        // works with Enter until every blank is filled.
+        const t = e.target;
+        if (t.closest && t.closest('nav, header, footer, details, .reportwrap, a, select, textarea')) return;
+        if (t.closest && t.closest('.chip, .slot') && $('go').disabled) return;
+        e.preventDefault();
+        if (e.repeat) return; // holding Enter must not skip several items
+        if (!$('go').disabled) $('go').click();
+        return;
       }
       if (checked || e.target.tagName === 'INPUT') return;
       const n = parseInt(e.key, 10);
