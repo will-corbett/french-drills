@@ -1,34 +1,57 @@
+/* ---------- colour schemes
+ * data-theme on <html>: "house" (default, French flag) or "classic".
+ * data-mode on <html>: "light" or "dark"; absent = follow the system.
+ */
 :root {
-  --bg: #f6f4ef;
-  --card: #ffffff;
-  --ink: #1f2430;
-  --muted: #6b7180;
-  --line: #dcd8ce;
-  --accent: #3b4cca;
-  --accent-ink: #ffffff;
-  --imp: #0f766e;
-  --pc: #b45309;
-  --good: #15803d;
-  --good-bg: #dcfce7;
-  --bad: #b91c1c;
-  --bad-bg: #fee2e2;
+  --bg: #f6f4ef; --card: #ffffff; --ink: #1f2430; --muted: #6b7180; --line: #dcd8ce;
+  --accent: #3b4cca; --accent-ink: #ffffff; --trim: #3b4cca; --stripe: var(--line);
+  --imp: #0f766e; --pc: #b45309;
+  --good: #15803d; --good-bg: #dcfce7; --bad: #b91c1c; --bad-bg: #fee2e2;
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #15171c;
-    --card: #1e2128;
-    --ink: #e8e6e1;
-    --muted: #9aa0ad;
-    --line: #353944;
-    --accent: #8b97f5;
-    --accent-ink: #12141a;
-    --imp: #5eead4;
-    --pc: #fbbf24;
-    --good: #86efac;
-    --good-bg: #14321f;
-    --bad: #fca5a5;
-    --bad-bg: #3b1a1a;
+  :root:not([data-mode="light"]) {
+    --bg: #15171c; --card: #1e2128; --ink: #e8e6e1; --muted: #9aa0ad; --line: #353944;
+    --accent: #8b97f5; --accent-ink: #12141a; --trim: #8b97f5; --stripe: var(--line);
+    --imp: #5eead4; --pc: #fbbf24;
+    --good: #86efac; --good-bg: #14321f; --bad: #fca5a5; --bad-bg: #3b1a1a;
+    color-scheme: dark;
   }
+}
+:root[data-mode="dark"] {
+  --bg: #15171c; --card: #1e2128; --ink: #e8e6e1; --muted: #9aa0ad; --line: #353944;
+  --accent: #8b97f5; --accent-ink: #12141a; --trim: #8b97f5; --stripe: var(--line);
+  --imp: #5eead4; --pc: #fbbf24;
+  --good: #86efac; --good-bg: #14321f; --bad: #fca5a5; --bad-bg: #3b1a1a;
+  color-scheme: dark;
+}
+
+/* House: bleu, blanc, rouge. Mostly blue and white, red for trim. */
+:root[data-theme="house"] {
+  --bg: #f3f6fc; --card: #ffffff; --ink: #0b1a3d; --muted: #56617c; --line: #d3dbee;
+  --accent: #123fa8; --accent-ink: #ffffff; --trim: #d42a33;
+  --stripe: linear-gradient(90deg, #123fa8 0 33.3%, #ffffff 33.3% 66.6%, #d42a33 66.6%);
+  --imp: #123fa8; --pc: #c0262f;
+  --good: #15803d; --good-bg: #dcfce7; --bad: #b91c1c; --bad-bg: #fde4e4;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="house"]:not([data-mode="light"]) {
+    --bg: #0a1330; --card: #111c43; --ink: #eef2fb; --muted: #9aa7c7; --line: #26366a;
+    --accent: #7f9cff; --accent-ink: #0a1330; --trim: #ff5d65;
+    --stripe: linear-gradient(90deg, #3d64e0 0 33.3%, #eef2fb 33.3% 66.6%, #ff5d65 66.6%);
+    --imp: #8fadff; --pc: #ff7d84;
+    --good: #86efac; --good-bg: #123323; --bad: #fca5a5; --bad-bg: #3d1a24;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="house"][data-mode="dark"] {
+  --bg: #0a1330; --card: #111c43; --ink: #eef2fb; --muted: #9aa7c7; --line: #26366a;
+  --accent: #7f9cff; --accent-ink: #0a1330; --trim: #ff5d65;
+  --stripe: linear-gradient(90deg, #3d64e0 0 33.3%, #eef2fb 33.3% 66.6%, #ff5d65 66.6%);
+  --imp: #8fadff; --pc: #ff7d84;
+  --good: #86efac; --good-bg: #123323; --bad: #fca5a5; --bad-bg: #3d1a24;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -165,3 +188,18 @@ kbd { font: .72rem/1 system-ui, sans-serif; color: var(--muted); border: 1px sol
 .t-subj { color: var(--pc); }
 .lesson { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
 .lesson select { font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; max-width: 100%; }
+
+/* ---------- trim and preferences */
+nav.site { position: relative; align-items: center; border-bottom: 0; padding-bottom: 12px; }
+nav.site::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 2px; background: var(--stripe); }
+nav.site a[aria-current] { color: var(--accent); }
+h1 .ou { color: var(--trim); }
+.head { color: var(--trim); }
+.card { border-top: 3px solid var(--trim); }
+.hubcard { border-left: 3px solid var(--accent); }
+.hubcard:hover { border-color: var(--trim); }
+.primary:not(:disabled):hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--trim) 35%, transparent); }
+.prefs { margin-left: auto; display: inline-flex; gap: 6px; }
+.prefs select { font: inherit; font-size: .8rem; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; }
+:root[data-theme="classic"] .card { border-top-width: 1px; border-top-color: var(--line); }
+:root[data-theme="classic"] .hubcard { border-left-width: 1px; border-left-color: var(--line); }

@@ -507,7 +507,219 @@ def u1_argumenter():
     ])
 
 
-LESSONS = [u1_opinions, u1_argumenter]
+# --------------------------------------------------------------------------- unit 1, vocabulary
+def strip_article(w):
+    return re.sub(r"^(le |la |les |l')", "", w)
+
+
+def u1_vocab_environnement():
+    # French, English, box, definition (written for this site)
+    W = [
+        ("la biodiversité", "biodiversity", "vivant", "la variété de toutes les formes de vie sur Terre"),
+        ("la biomasse", "biomass", "vivant", "la masse totale de matière vivante dans un milieu"),
+        ("la chaîne alimentaire", "the food chain", "vivant", "la suite d'êtres vivants dont chacun se nourrit du précédent"),
+        ("l'écosystème", "ecosystem", "vivant", "un milieu et l'ensemble des êtres vivants qui y interagissent"),
+        ("l'espèce", "species", "vivant", "un ensemble d'individus semblables qui peuvent se reproduire entre eux"),
+        ("l'habitat", "habitat", "vivant", "le milieu où vit naturellement un animal ou une plante"),
+        ("l'organisme vivant", "living organism", "vivant", "tout être, animal, végétal ou microscopique, qui vit"),
+        ("l'invertébré", "invertebrate", "faune", "un animal qui n'a pas de colonne vertébrale"),
+        ("la plante", "plant", "faune", "un être vivant qui pousse dans la terre et fabrique sa nourriture grâce à la lumière"),
+        ("le prédateur", "predator", "faune", "un animal qui chasse d'autres animaux pour s'en nourrir"),
+        ("la proie", "prey", "faune", "un animal chassé et mangé par un autre"),
+        ("la racine", "root", "faune", "la partie d'une plante qui se trouve sous la terre"),
+        ("sauvage", "wild", "faune", "qui vit en liberté dans la nature"),
+        ("domestique", "domestic, tame", "faune", "qui vit auprès de l'homme et a été apprivoisé"),
+        ("la végétation", "vegetation", "faune", "l'ensemble des plantes d'une région"),
+        ("l'algue", "seaweed, alga", "marin", "une plante qui pousse dans l'eau douce ou salée"),
+        ("le banc de poissons", "shoal of fish", "marin", "un grand groupe de poissons qui nagent ensemble"),
+        ("le cétacé", "cetacean (whale, dolphin)", "marin", "un grand mammifère marin, comme la baleine ou le dauphin"),
+        ("le corail", "coral", "marin", "un petit animal marin qui forme des récifs"),
+        ("le crustacé", "crustacean", "marin", "un animal aquatique à carapace, comme le crabe ou la crevette"),
+        ("les fonds marins", "the seabed", "marin", "le sol tout au fond des océans"),
+        ("le mollusque", "mollusc", "marin", "un animal au corps mou, souvent protégé par une coquille, comme l'huître"),
+        ("le plancton", "plankton", "marin", "les minuscules organismes qui dérivent dans l'eau"),
+        ("le poisson-perroquet", "parrotfish", "marin", "un poisson coloré des récifs, à la bouche en forme de bec"),
+        ("le reptile", "reptile", "marin", "un animal à sang froid couvert d'écailles, comme le serpent"),
+        ("le requin gris", "grey reef shark", "marin", "un requin qui vit près des récifs coralliens"),
+        ("la tortue marine", "sea turtle", "marin", "un reptile à carapace qui vit dans les océans"),
+        ("le thon", "tuna", "marin", "un grand poisson de mer, souvent vendu en conserve"),
+        ("la catastrophe naturelle", "natural disaster", "degr", "un événement naturel violent, comme un séisme ou une inondation"),
+        ("le déchet toxique", "toxic waste", "degr", "un résidu dangereux pour la santé ou l'environnement"),
+        ("la déforestation", "deforestation", "degr", "la destruction des forêts"),
+        ("les émissions de CO2", "CO2 emissions", "degr", "les rejets de dioxyde de carbone dans l'air"),
+        ("les gaz à effet de serre", "greenhouse gases", "degr", "les gaz qui retiennent la chaleur dans l'atmosphère"),
+        ("l'extinction", "extinction", "degr", "la disparition totale d'une espèce"),
+        ("la marée noire", "oil spill", "degr", "une pollution de la mer par une nappe de pétrole"),
+        ("polluant", "polluting; pollutant", "degr", "qui salit et dégrade l'environnement"),
+        ("la pollution atmosphérique", "air pollution", "degr", "la pollution de l'air"),
+        ("le réchauffement climatique", "global warming", "degr", "l'augmentation de la température moyenne de la planète"),
+        ("l'agriculture biologique", "organic farming", "demarche", "une agriculture sans pesticides ni engrais chimiques"),
+        ("les enjeux environnementaux", "environmental issues (what is at stake)", "demarche", "les questions importantes, ce qu'on risque de gagner ou de perdre pour l'environnement"),
+        ("l'impact écologique", "environmental impact", "demarche", "l'effet d'une activité sur l'environnement"),
+        ("la marche pour le climat", "climate march", "demarche", "une manifestation pour réclamer des actions contre le réchauffement"),
+        ("le mode de vie écolo", "eco-friendly lifestyle", "demarche", "une manière de vivre respectueuse de l'environnement (familier)"),
+        ("l'organisation non gouvernementale", "non-governmental organisation (NGO)", "demarche", "une association indépendante des États, une ONG"),
+        ("la transition écologique", "ecological transition", "demarche", "le passage vers une économie et un mode de vie plus respectueux de l'environnement"),
+        ("la réserve naturelle", "nature reserve", "demarche", "un territoire protégé pour préserver la faune et la flore"),
+        ("acheter en vrac", "to buy loose / package-free", "zero", "acheter des produits sans emballage, à la quantité voulue"),
+        ("bannir les objets à usage unique", "to ban single-use items", "zero", "ne plus utiliser d'objets qu'on jette après une seule utilisation"),
+        ("préférer les emballages réutilisables", "to choose reusable packaging", "zero", "choisir des contenants qu'on peut utiliser plusieurs fois"),
+        ("recycler", "to recycle", "zero", "transformer un déchet pour en refaire une matière utilisable"),
+        ("trier ses déchets", "to sort one's waste", "zero", "séparer ses déchets selon leur type avant de les jeter"),
+    ]
+    BOX = {"vivant": "Le monde vivant", "faune": "La faune et la flore", "marin": "Le monde marin",
+           "degr": "La dégradation de l'environnement", "demarche": "Une démarche écologique", "zero": "Choisir le zéro déchet"}
+
+    def others(i, field, n=3):
+        same = [w for j, w in enumerate(W) if j != i and w[2] == W[i][2]]
+        rest = [w for j, w in enumerate(W) if j != i and w[2] != W[i][2]]
+        pick = rng.sample(same, min(2, len(same)))
+        pick += rng.sample(rest, n - len(pick))
+        return [p[field] for p in pick]
+
+    fr_en, en_fr, defs = [], [], []
+    for i, (fr, en, box, d) in enumerate(W):
+        x = f"{fr} = {en} ({BOX[box]})"
+        fr_en.append(dict(id=f"u1v-fe{i}", layout="list", ctx="Que veut dire ce mot ?",
+                          p=[f"« {fr} »  → ", dict(a=en, o=others(i, 1), x=x, k=fr)]))
+        alt = [strip_article(fr)] if strip_article(fr) != fr else []
+        en_fr.append(dict(id=f"u1v-ef{i}", p=[f"« {en} »  → ", dict(a=fr, alt=alt, o=others(i, 0), x=x, k=fr,
+                                                                      h="in French, article optional")]))
+        defs.append(dict(id=f"u1v-d{i}", layout="list", ctx="Retrouvez le mot qui correspond à la définition.",
+                         p=[f"{d[0].upper() + d[1:]} :  ", dict(a=fr, o=others(i, 0), x=x, k=fr)]))
+
+    G = [  # noun, gender, note
+        ("écosystème", "m", "Words in -ème from Greek are usually masculine: un écosystème, un problème, un thème."),
+        ("espèce", "f", "Une espèce is always feminine, even for male animals (une espèce menacée)."),
+        ("habitat", "m", "Un habitat: masculine."),
+        ("organisme", "m", "Words in -isme are masculine: un organisme, le tourisme."),
+        ("invertébré", "m", "Un invertébré: masculine (un animal invertébré)."),
+        ("algue", "f", "Une algue: feminine."),
+        ("extinction", "f", "Words in -tion are feminine: une extinction, une émission, une organisation."),
+        ("émission", "f", "Words in -sion / -tion are feminine: une émission."),
+        ("gaz", "m", "Un gaz (plural les gaz): masculine."),
+        ("agriculture", "f", "L'agriculture is feminine; words in -ure usually are (la nature, la culture)."),
+        ("impact", "m", "Un impact: masculine."),
+        ("organisation", "f", "Words in -tion are feminine: une organisation."),
+        ("enjeu", "m", "Un enjeu (plural les enjeux): masculine, like le jeu."),
+        ("écologie", "f", "L'écologie is feminine; words in -ie usually are (la biologie, la géographie)."),
+        ("environnement", "m", "Words in -ment are masculine: un environnement, le réchauffement."),
+        ("plancton", "m", "Le plancton: masculine."),
+        ("corail", "m", "Le corail (plural les coraux): masculine."),
+        ("proie", "f", "Une proie: feminine, even when the prey is a male animal."),
+    ]
+    genre = [dict(id=f"u1v-g{i}", p=["", dict(a="une" if g == "f" else "un", o=["un" if g == "f" else "une"], x=x,
+                                              k="genre: " + n), f" {n}"])
+             for i, (n, g, x) in enumerate(G)]
+
+    C = [  # sentence, answer, wrong, explanation
+        ("Depuis deux ans, je ___ dans une association de protection des océans.", "m'engage", ["participe", "soutiens"],
+         "s'engager dans (une association, une cause) = to get involved in, commit to."),
+        ("Nous avons ___ à la marche pour le climat samedi dernier.", "participé", ["soutenu", "encouragé"],
+         "participer à = to take part in."),
+        ("La mairie ___ les habitants à trier leurs déchets.", "encourage", ["s'engage", "participe"],
+         "encourager qqn à faire qqch = to encourage someone to do something."),
+        ("Il faut ___ nos émissions de gaz à effet de serre.", "réduire", ["encourager", "participer"],
+         "réduire = to reduce (réduire ses émissions, son impact écologique)."),
+        ("Après ce documentaire, beaucoup de gens se sont ___ sur leur mode de vie.", "interrogés", ["engagés", "réduits"],
+         "s'interroger sur = to question, reflect on."),
+        ("Ils ont décidé d'aller ___ à la campagne, plus près de la nature.", "vivre", ["réduire", "soutenir"],
+         "vivre = to live."),
+        ("Cette ONG ___ les agriculteurs qui passent au bio.", "soutient", ["s'interroge", "vit"],
+         "soutenir = to support (je soutiens, il soutient, ils soutiennent)."),
+        ("Pour ___ les mentalités, il faut commencer par l'école.", "changer", ["participer", "s'engager"],
+         "changer = to change (changer les mentalités, changer son mode de vie)."),
+        ("Le loup est un ___ : il chasse d'autres animaux.", "prédateur", ["proie", "invertébré"],
+         "le prédateur = predator; la proie = prey."),
+        ("La gazelle est la ___ du lion.", "proie", ["prédatrice", "racine"], "la proie = prey."),
+        ("Le pétrole échappé du navire a provoqué une ___ sur toute la côte.", "marée noire",
+         ["chaîne alimentaire", "réserve naturelle"], "la marée noire = oil spill."),
+        ("Les ___, comme le crabe ou la crevette, ont une carapace.", "crustacés", ["cétacés", "mollusques"],
+         "le crustacé = crustacean (crab, shrimp); le cétacé = whale, dolphin; le mollusque = mollusc (oyster, octopus)."),
+        ("La baleine n'est pas un poisson, c'est un ___.", "cétacé", ["crustacé", "reptile"],
+         "le cétacé = cetacean, a marine mammal."),
+        ("Le ___ est à la base de la chaîne alimentaire des océans.", "plancton", ["thon", "requin gris"],
+         "le plancton = plankton."),
+        ("La hausse de la température de l'eau fait blanchir les récifs de ___.", "corail", ["thon", "plancton"],
+         "le corail = coral (les récifs de corail, les récifs coralliens)."),
+        ("J'achète mes pâtes et mon riz en ___, sans emballage.", "vrac", ["déchet", "transition"],
+         "acheter en vrac = to buy loose, without packaging."),
+        ("Les pailles en plastique sont des objets à ___ : on les jette après une seule utilisation.", "usage unique",
+         ["effet de serre", "vrac"], "les objets à usage unique = single-use items."),
+        ("Dans notre immeuble, il y a trois poubelles différentes pour ___ nos déchets.", "trier", ["bannir", "vivre"],
+         "trier ses déchets = to sort one's waste."),
+        ("Les ___ à effet de serre retiennent la chaleur dans l'atmosphère.", "gaz", ["déchets", "enjeux"],
+         "les gaz à effet de serre = greenhouse gases."),
+        ("La ___ des forêts tropicales menace des milliers d'espèces.", "déforestation", ["végétation", "biomasse"],
+         "la déforestation = deforestation."),
+        ("Le dodo a disparu : son ___ date du XVIIe siècle.", "extinction", ["habitat", "espèce"],
+         "l'extinction (f.) = extinction. Son before a feminine noun starting with a vowel: son extinction."),
+        ("Ce parc est une ___ : la chasse et la cueillette y sont interdites.", "réserve naturelle",
+         ["chaîne alimentaire", "catastrophe naturelle"], "la réserve naturelle = nature reserve."),
+        ("Les ___ de cette conférence sur le climat sont énormes.", "enjeux", ["fonds", "bancs"],
+         "les enjeux = what is at stake, the key issues."),
+        ("Les ___ marins abritent des espèces encore inconnues.", "fonds", ["bancs", "enjeux"],
+         "les fonds marins = the seabed, the ocean depths."),
+        ("Greenpeace est une ___ : elle ne dépend d'aucun État.", "organisation non gouvernementale",
+         ["réserve naturelle", "transition écologique"], "l'organisation non gouvernementale (ONG) = NGO."),
+        ("Le chat est un animal ___, le renard est un animal sauvage.", "domestique", ["polluant", "marin"],
+         "domestique = domestic, tame; sauvage = wild."),
+        ("Les vieilles voitures diesel sont très ___.", "polluantes", ["sauvages", "domestiques"],
+         "polluant(e) = polluting. It agrees: des voitures polluantes."),
+        ("Le passage à une économie plus verte, c'est la transition ___.", "écologique", ["alimentaire", "naturelle"],
+         "la transition écologique = ecological transition."),
+        ("Le séisme et le tsunami ont été une terrible catastrophe ___.", "naturelle", ["écologique", "alimentaire"],
+         "la catastrophe naturelle = natural disaster."),
+        ("Chaque espèce occupe une place dans la ___ alimentaire.", "chaîne", ["marée", "marche"],
+         "la chaîne alimentaire = food chain."),
+    ]
+    contexte = []
+    for i, (sent, a, wrong, x) in enumerate(C):
+        before, after = sent.split("___")
+        contexte.append(dict(id=f"u1v-c{i}", p=[before, dict(a=a, o=wrong, x=x, k=a), after]))
+
+    X = [  # expression, meaning (fr), English, sentence with ___
+        ("Chassez le naturel, il revient au galop.", "On ne peut pas se débarrasser de ses tendances naturelles.",
+         "You can't change your nature; a leopard can't change its spots.",
+         "Il avait promis d'arrêter de mentir, mais il recommence déjà : ___"),
+        ("Être une bonne nature.", "Avoir très bon caractère.", "To be good-natured, easy-going.",
+         "Ma grand-mère ne se fâche jamais, elle a toujours été ___"),
+        ("Une nature morte.", "Un tableau qui représente des objets inanimés.", "A still life (painting).",
+         "Au musée, j'ai admiré ___ de Cézanne : des pommes et une cruche."),
+        ("Tous les goûts sont dans la nature.", "Chacun peut avoir des goûts différents.", "It takes all sorts; to each their own.",
+         "Tu aimes les frites avec de la confiture ? Bon… ___"),
+        ("S'évanouir dans la nature.", "Disparaître sans laisser de trace.", "To vanish into thin air.",
+         "Le voleur a pris l'argent et s'est ___"),
+    ]
+    in_context = ["chassez le naturel, il revient au galop !", "une bonne nature.", "une nature morte",
+                  "tous les goûts sont dans la nature !", "évanoui dans la nature."]
+    expressions = []
+    for i, (e, d, en, _) in enumerate(X):
+        wrong = [o[0] for j, o in enumerate(X) if j != i]
+        expressions.append(dict(id=f"u1v-x{i}", layout="list", ctx="Quelle expression correspond à cette définition ?",
+                                p=[f"{d}  → ", dict(a=e, o=rng.sample(wrong, 3), x=f"{en}", k=e)]))
+    for i, (e, d, en, sent) in enumerate(X):
+        before, after = sent.split("___")
+        wrong = [w for j, w in enumerate(in_context) if j != i]
+        expressions.append(dict(id=f"u1v-xc{i}", layout="list", ctx="Complétez avec l'expression qui convient.",
+                                p=[before, dict(a=in_context[i], o=rng.sample(wrong, 3), x=f"{e} — {en}", k=e), after]))
+
+    return dict(id="u1-vocab-environnement", unit="Unité 1",
+                title="Vocabulaire · L'environnement et l'écologie (p. 22)", decks=[
+        dict(id="fr-en", label="Sens (FR → EN)", items=fr_en, info="What does each word mean?"),
+        dict(id="en-fr", label="Traduire (EN → FR)", modes=["choose", "type"], items=en_fr,
+             info="Find the French word. In Type mode the article is optional."),
+        dict(id="definitions", label="Définitions", items=defs, info="Which word matches the definition?"),
+        dict(id="genre", label="Un ou une ?", items=genre,
+             info="The gender of nouns that start with a vowel, so l' hides it. Press 1 or 2 to answer."),
+        dict(id="contexte", label="En contexte", items=contexte,
+             info="Nouns and the verbs from exercise 8 in sentences."),
+        dict(id="expressions", label="Expressions « nature »", items=expressions,
+             info="The figurative expressions with « nature »: meanings, then in context."),
+    ])
+
+
+LESSONS = [u1_opinions, u1_argumenter, u1_vocab_environnement]
 
 
 def main():

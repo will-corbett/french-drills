@@ -172,7 +172,7 @@
   };
   document.querySelectorAll('[data-mode]').forEach((b) => { b.onclick = () => setMode(b.dataset.mode); });
   document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' || e.target.closest('.seg, .rules, footer, .pick, #hint, .report')) return;
+    if (e.key !== 'Enter' || e.target.closest('nav, .seg, .rules, footer, .pick, #hint, .report')) return;
     if (e.target.id === 'go') return; // the button handles its own Enter
     e.preventDefault(); $('go').click();
   });

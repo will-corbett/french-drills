@@ -10,7 +10,7 @@ prefilled GitHub issue.
 | `prepositions.html` | À or de after a verb or expression | Tatoeba, `scripts/build_prepositions.py` |
 | `si.html` | Si + imparfait → conditionnel présent | Tatoeba, `scripts/build_si.py` |
 | `connecteurs.html` | Connectors in model TCF writing answers | written here, `scripts/build_connecteurs.py` |
-| `edito.html` | Review drills for *Édito B2* lessons | written here, `scripts/build_edito.py` |
+| `edito.html` | Review drills for *Édito B2* grammar and vocabulary lessons | written here, `scripts/build_edito.py` |
 
 `drill.js` is the shared engine for every page except the imparfait drill (`app.js`). Its item format is
 documented at the top of the file.
@@ -47,3 +47,8 @@ Write a function in `scripts/build_edito.py` that returns the lesson's decks (se
 - Sentences and translations: [Tatoeba](https://tatoeba.org), CC BY 2.0 FR. Each sentence links to its
   Tatoeba page and names its author.
 - Verb forms used to build the data: [Lexique 3.83](http://www.lexique.org), CC BY-SA 4.0.
+
+## Colour schemes
+
+`theme.js` adds a scheme picker (House, the default French-flag palette, or Classic) and a light / dark / auto
+picker to the navigation bar. The palettes are CSS custom properties at the top of `style.css`.
