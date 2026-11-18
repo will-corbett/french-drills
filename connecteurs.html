@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connecteurs TCF</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <nav class="site"><a href="./">Drills</a><a href="imparfait.html">Imparfait / PC</a><a href="prepositions.html">À ou de</a><a href="si.html">Si + imparfait</a><a href="connecteurs.html" aria-current="page">Connecteurs TCF</a><a href="edito.html">Édito B2</a></nav>
+</main>
+<script src="drill.js"></script>
+<script>
+Drill.page({
+  storageKey: 'connecteurs-v1', title: 'Connecteurs TCF',
+  heading: 'Connecteurs <span class="ou">·</span> TCF écrit',
+  intro: 'Model answers to TCF Expression écrite tasks with the linking words removed. Click a blank, then a connector; click a filled blank to empty it.',
+  decks: [
+    { id: 'textes', label: 'Textes TCF', url: 'data/connecteurs-textes.json', info: 'Fill every numbered blank from the word bank. Some blanks accept more than one connector.' },
+    { id: 'phrases', label: 'Phrases', url: 'data/connecteurs-phrases.json', info: 'One connector per sentence. Press 1–4 to answer from the keyboard.' },
+  ],
+  rules: `<div class="cols">
+    <div><ul>
+      <li><b>Ordonner :</b> <i lang="fr">tout d'abord, ensuite, puis, enfin ; d'une part… d'autre part</i></li>
+      <li><b>Ajouter :</b> <i lang="fr">de plus, en outre, par ailleurs, d'ailleurs, qui plus est</i></li>
+      <li><b>Illustrer :</b> <i lang="fr">par exemple, notamment, ainsi</i></li>
+      <li><b>Cause :</b> <i lang="fr">en effet, car, puisque, comme, étant donné que, grâce à / à cause de</i></li>
+      <li><b>Conséquence :</b> <i lang="fr">donc, c'est pourquoi, par conséquent, si bien que, ainsi</i></li>
+    </ul></div>
+    <div><ul>
+      <li><b>Opposer :</b> <i lang="fr">cependant, pourtant, néanmoins, toutefois, en revanche, alors que, au contraire</i></li>
+      <li><b>Concéder :</b> <i lang="fr">certes… mais, il est vrai que, bien que (+ subj.), malgré (+ nom)</i></li>
+      <li><b>Insister :</b> <i lang="fr">il faut souligner que, il convient de rappeler que, surtout</i></li>
+      <li><b>Conclure :</b> <i lang="fr">en conclusion, pour conclure, en fin de compte, en définitive, somme toute, bref</i></li>
+      <li><b>Registre :</b> <i lang="fr">en plus, par contre, du coup, bref</i> are fine in Tâche 1 messages but too casual for Tâche 3.</li>
+    </ul></div></div>`,
+  footer: 'Texts written for this site.',
+});
+</script>
+</body>
+</html>

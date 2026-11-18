@@ -3,73 +3,39 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Imparfait ou passé composé ?</title>
+<title>French Drills</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
+  <nav class="site"><a href="./" aria-current="page">Drills</a><a href="imparfait.html">Imparfait / PC</a><a href="prepositions.html">À ou de</a><a href="si.html">Si + imparfait</a><a href="connecteurs.html">Connecteurs TCF</a><a href="edito.html">Édito B2</a></nav>
   <header>
-    <h1>Imparfait <span class="ou">ou</span> passé composé&nbsp;?</h1>
-    <div class="controls">
-      <div class="seg" role="group" aria-label="Answer mode">
-        <button type="button" data-mode="choose">Choose</button>
-        <button type="button" data-mode="type">Type</button>
-      </div>
-      <label class="check"><input type="checkbox" id="contrast"> Only sentences with both tenses</label>
-    </div>
+    <h1>French drills</h1>
+    <p class="intro">Short, repeatable drills. Mistakes come back until you get them right twice, and progress is kept in this browser.</p>
   </header>
-
-  <section class="card" id="card" aria-live="polite">
-    <p class="sentence" id="sentence" lang="fr">Loading sentences…</p>
-    <p class="english" id="english" hidden></p>
-    <div class="accents" id="accents" hidden></div>
-    <div class="actions">
-      <button type="button" class="ghost" id="hint">Show English</button>
-      <button type="button" class="primary" id="go" disabled>Check</button>
-    </div>
-    <p class="verdict" id="verdict" hidden></p>
-    <p class="source" id="source" hidden></p>
-    <p class="report">
-      <button type="button" class="link" id="report">Report a problem with this sentence</button>
-      <span id="reported" hidden>Reported — you won't be shown this sentence again.</span>
-    </p>
-  </section>
-
-  <section class="stats" id="stats"></section>
-
-  <details class="rules">
-    <summary>Rules of thumb</summary>
-    <div class="cols">
-      <div>
-        <h2 class="t-i">Imparfait</h2>
-        <ul>
-          <li>Background, description, setting the scene: <i lang="fr">Il faisait froid.</i></li>
-          <li>An action in progress, often interrupted: <i lang="fr">Je dormais quand…</i></li>
-          <li>Habits and repeated actions with no set count: <i lang="fr">Nous allions à la plage chaque été.</i></li>
-          <li>States of mind and being: <i lang="fr">Elle voulait partir. J'étais fatigué.</i></li>
-          <li>Signal words: <i lang="fr">souvent, d'habitude, tous les jours, pendant que</i></li>
-        </ul>
-      </div>
-      <div>
-        <h2 class="t-p">Passé composé</h2>
-        <ul>
-          <li>A completed event at a specific moment: <i lang="fr">Il est arrivé à midi.</i></li>
-          <li>The action that interrupts: <i lang="fr">…le téléphone a sonné.</i></li>
-          <li>A series of events moving the story on: <i lang="fr">Je me suis levé, j'ai mangé, je suis parti.</i></li>
-          <li>A bounded duration or a counted number of times: <i lang="fr">J'ai habité là deux ans.</i></li>
-          <li>A sudden change of state: <i lang="fr">J'ai eu peur. Il a su la vérité.</i></li>
-          <li>Signal words: <i lang="fr">soudain, hier, une fois, tout à coup</i></li>
-        </ul>
-      </div>
-    </div>
-  </details>
-
-  <footer>
-    Sentences from <a href="https://tatoeba.org">Tatoeba</a> (CC&nbsp;BY&nbsp;2.0&nbsp;FR); verb forms from
-    <a href="http://www.lexique.org">Lexique&nbsp;3</a> (CC&nbsp;BY-SA&nbsp;4.0). The other-tense option is generated
-    automatically. <button type="button" class="link" id="reset">Reset my stats</button>
-  </footer>
+  <div class="hub">
+    <a class="hubcard" href="imparfait.html">
+      <b>Imparfait ou passé composé&nbsp;?</b>
+      <span>Choose or type the right past tense in real sentences from Tatoeba.</span>
+    </a>
+    <a class="hubcard" href="prepositions.html">
+      <b>À ou de&nbsp;?</b>
+      <span>Which preposition follows the verb: <i lang="fr">réussir à, essayer de, avoir besoin de…</i> in every tense.</span>
+    </a>
+    <a class="hubcard" href="si.html">
+      <b>Si + imparfait → conditionnel</b>
+      <span>Hypotheses: <i lang="fr">Si j'avais le temps, je voyagerais.</i> Choose or type both verbs.</span>
+    </a>
+    <a class="hubcard" href="connecteurs.html">
+      <b>Connecteurs (TCF écrit)</b>
+      <span>Place <i lang="fr">d'ailleurs, en fin de compte, il faut souligner que…</i> in model TCF answers.</span>
+    </a>
+    <a class="hubcard" href="edito.html">
+      <b>Édito B2</b>
+      <span>Review drills for the lessons you've covered, unit by unit.</span>
+    </a>
+  </div>
+  <footer>Sentences from <a href="https://tatoeba.org">Tatoeba</a> (CC&nbsp;BY&nbsp;2.0&nbsp;FR); verb forms from <a href="http://www.lexique.org">Lexique&nbsp;3</a> (CC&nbsp;BY-SA&nbsp;4.0). Spotted an error? Every item has a “Report a problem” link.</footer>
 </main>
-<script src="app.js"></script>
 </body>
 </html>

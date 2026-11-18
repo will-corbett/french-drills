@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Si + imparfait</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <nav class="site"><a href="./">Drills</a><a href="imparfait.html">Imparfait / PC</a><a href="prepositions.html">À ou de</a><a href="si.html" aria-current="page">Si + imparfait</a><a href="connecteurs.html">Connecteurs TCF</a><a href="edito.html">Édito B2</a></nav>
+</main>
+<script src="drill.js"></script>
+<script>
+Drill.page({
+  storageKey: 'si-v1', title: 'Si + imparfait',
+  heading: 'Si + imparfait <span class="ou">→</span> conditionnel',
+  intro: 'Hypotheses about the present or future: <i lang="fr">Si j\'avais le temps, je voyagerais.</i> Choose or type both verbs.',
+  tags: { si: 'si + imparfait', cond: 'conditionnel' },
+  showHintInChoose: true,
+  decks: [{ id: 'all', label: 'All', url: 'data/si.json', modes: ['choose', 'type'] }],
+  rules: `<div class="cols">
+    <div><h2 class="t-si">Si-clause: imparfait</h2><ul>
+      <li>Stem: <i lang="fr">nous</i> form of the present minus <i lang="fr">-ons</i> (<i lang="fr">nous finissons → finiss-</i>). Only <i lang="fr">être</i> is irregular: <i lang="fr">ét-</i>.</li>
+      <li>Endings: <i lang="fr">-ais, -ais, -ait, -ions, -iez, -aient</i>.</li>
+      <li>Never the conditionnel after <i lang="fr">si</i>: <s lang="fr">si j'aurais</s> → <i lang="fr">si j'avais</i>.</li>
+    </ul></div>
+    <div><h2 class="t-cond">Main clause: conditionnel présent</h2><ul>
+      <li>Future stem + imparfait endings: <i lang="fr">je finirais, nous prendrions</i>.</li>
+      <li>Irregular stems as in the future: <i lang="fr">être → ser-, avoir → aur-, aller → ir-, faire → fer-, pouvoir → pourr-, vouloir → voudr-, savoir → saur-, devoir → devr-, venir → viendr-, voir → verr-, falloir → faudr-</i>.</li>
+      <li>Compare <i lang="fr">si + présent → futur</i> for real conditions: <i lang="fr">S'il pleut, je resterai.</i></li>
+    </ul></div></div>`,
+  footer: 'Sentences from <a href="https://tatoeba.org">Tatoeba</a> (CC&nbsp;BY&nbsp;2.0&nbsp;FR); verb forms from <a href="http://www.lexique.org">Lexique&nbsp;3</a> (CC&nbsp;BY-SA&nbsp;4.0).',
+});
+</script>
+</body>
+</html>

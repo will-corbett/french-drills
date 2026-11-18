@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Édito B2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <nav class="site"><a href="./">Drills</a><a href="imparfait.html">Imparfait / PC</a><a href="prepositions.html">À ou de</a><a href="si.html">Si + imparfait</a><a href="connecteurs.html">Connecteurs TCF</a><a href="edito.html" aria-current="page">Édito B2</a></nav>
+</main>
+<script src="drill.js"></script>
+<script>
+const LKEY = 'edito-lesson';
+let lessons = [], files = {};
+const getJSON = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); });
+function current() {
+  let id = null; try { id = localStorage.getItem(LKEY); } catch (e) { /* ignore */ }
+  return lessons.find((l) => l.id === id) || lessons[lessons.length - 1];
+}
+async function decksFor(lesson) {
+  await Promise.all(lessons.map(async (l) => { files[l.id] = files[l.id] || await getJSON(l.file); }));
+  const mine = files[lesson.id].map((d) => Object.assign({}, d, { id: lesson.id + ':' + d.id,
+    items: d.items.map((it) => Object.assign({}, it, { head: d.label })) }));
+  const everything = lessons.flatMap((l) => files[l.id].flatMap((d) => d.items.map((it) =>
+    Object.assign({}, it, { head: `${l.unit} · ${l.title} · ${d.label}` }))));
+  return [...mine, { id: 'all-lessons', label: 'Révision : toutes les leçons', items: everything,
+    info: lessons.length > 1 ? `Mixed review across all ${lessons.length} lessons so far.` : 'Mixed review of everything so far. More lessons will join this set as they are added.' }];
+}
+const api = Drill.page({
+  storageKey: 'edito-v1', title: 'Édito B2',
+  heading: 'Édito B2 <span class="ou">·</span> révisions',
+  headerExtra: '<div class="lesson"><label for="lesson">Leçon</label><select id="lesson"></select></div>',
+  tags: { ind: 'indicatif', subj: 'subjonctif' },
+  decks: () => getJSON('data/edito/index.json').then((idx) => {
+    lessons = idx;
+    const sel = document.getElementById('lesson');
+    for (const l of lessons) { const o = document.createElement('option'); o.value = l.id; o.textContent = `${l.unit} — ${l.title}`; sel.append(o); }
+    sel.value = current().id;
+    sel.onchange = () => { try { localStorage.setItem(LKEY, sel.value); } catch (e) { /* ignore */ } api.setDecks(decksFor(current())); };
+    return decksFor(current());
+  }),
+  rules: `<p><b>Indicatif ou subjonctif après l'opinion</b></p><ul>
+    <li>Affirmative opinion → indicatif: <i lang="fr">Je crois qu'il viendra. Je trouve qu'il a raison.</i></li>
+    <li>Negative or inverted question → subjonctif: <i lang="fr">Je ne crois pas qu'il soit végétarien. Pensez-vous qu'il ait raison ?</i></li>
+    <li><i lang="fr">Je trouve + adjectif + que</i> (a feeling) → subjonctif: <i lang="fr">Je trouve bizarre qu'il fasse cela.</i></li>
+    <li><i lang="fr">Il me semble que</i> → indicatif; <i lang="fr">il semble que</i> → subjonctif. <i lang="fr">Il est probable que</i> → indicatif; <i lang="fr">il est peu probable que</i> → subjonctif.</li></ul>`,
+  footer: 'Drills written for this site to review the lessons of <i>Édito B2</i>. Expressions follow the textbook\'s summary tables.',
+});
+</script>
+</body>
+</html>

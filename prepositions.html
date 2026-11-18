@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>À ou de ?</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <nav class="site"><a href="./">Drills</a><a href="imparfait.html">Imparfait / PC</a><a href="prepositions.html" aria-current="page">À ou de</a><a href="si.html">Si + imparfait</a><a href="connecteurs.html">Connecteurs TCF</a><a href="edito.html">Édito B2</a></nav>
+</main>
+<script src="drill.js"></script>
+<script>
+const TRICKY = new Set(['penser à', 'penser de', 'manquer à', 'manquer de', "il est facile de / c'est facile à", 'obliger à', 'obligé de',
+  'forcer à', 'forcé de', 'décider de', 'se décider à', 'décidé à', 'servir à', 'se servir de', 'venir de', 'finir de', 'commencer à']);
+Drill.page({
+  storageKey: 'prepositions-v1', title: 'À ou de',
+  heading: 'À <span class="ou">ou</span> de&nbsp;?',
+  intro: 'Choose the preposition that follows the verb or expression. Missed constructions come back in other sentences.',
+  tags: { a: 'à', d: 'de' },
+  decks: () => fetch('data/prepositions.json').then((r) => r.json()).then((items) => [
+    { id: 'all', label: 'Everything', items },
+    { id: 'tricky', label: 'Tricky pairs', items, filter: (it) => it.p.some((b) => typeof b !== 'string' && TRICKY.has(b.k)),
+      info: 'Constructions that change preposition with meaning or form: penser à / de, manquer à / de, obliger à / être obligé de, facile à / de…' },
+  ]),
+  rules: `<div class="cols">
+    <div><h2 class="t-a">à</h2><ul>
+      <li>Aiming at or working towards something: <i lang="fr">aider à, chercher à, réussir à, arriver à, parvenir à, tenir à</i></li>
+      <li>Starting or getting used to: <i lang="fr">commencer à, se mettre à, s'habituer à, apprendre à</i></li>
+      <li>Indirect objects of people: <i lang="fr">téléphoner à, répondre à, obéir à, plaire à, ressembler à</i></li>
+      <li><i lang="fr">avoir du mal à, avoir tendance à, être prêt à, être le premier / le seul à</i></li>
+    </ul></div>
+    <div><h2 class="t-d">de</h2><ul>
+      <li>Stopping, avoiding, forgetting: <i lang="fr">arrêter de, cesser de, éviter de, oublier de, empêcher de</i></li>
+      <li>Deciding, asking, telling, promising: <i lang="fr">décider de, demander à qqn de, dire de, promettre de, conseiller de</i></li>
+      <li>Feelings and needs: <i lang="fr">avoir peur de, avoir envie de, avoir besoin de, être content de, regretter de</i></li>
+      <li>Most reflexive verbs: <i lang="fr">se souvenir de, s'occuper de, se moquer de, se plaindre de</i></li>
+    </ul></div></div>
+    <p>Watch the pairs: <i lang="fr">obliger qqn à</i> but <i lang="fr">être obligé de</i>; <i lang="fr">décider de</i> but <i lang="fr">se décider à</i>; <i lang="fr">Il est difficile de lire ce texte</i> but <i lang="fr">Ce texte est difficile à lire</i>.</p>`,
+  footer: 'Sentences from <a href="https://tatoeba.org">Tatoeba</a> (CC&nbsp;BY&nbsp;2.0&nbsp;FR); verb forms from <a href="http://www.lexique.org">Lexique&nbsp;3</a> (CC&nbsp;BY-SA&nbsp;4.0).',
+});
+</script>
+</body>
+</html>
