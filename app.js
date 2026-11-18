@@ -172,6 +172,12 @@
   };
   document.querySelectorAll('[data-mode]').forEach((b) => { b.onclick = () => setMode(b.dataset.mode); });
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.closest('.pick') && !checked) {
+      // Enter on a chosen answer button checks it instead of clicking the button again
+      e.preventDefault();
+      if (!$('go').disabled) $('go').click();
+      return;
+    }
     if (e.key !== 'Enter' || e.target.closest('nav, .seg, .rules, footer, .pick, #hint, .report')) return;
     if (e.target.id === 'go') return; // the button handles its own Enter
     e.preventDefault(); $('go').click();
