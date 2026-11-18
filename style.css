@@ -28,9 +28,10 @@
 
 /* House: bleu, blanc, rouge. Mostly blue and white, red for trim. */
 :root[data-theme="house"] {
-  --bg: #f3f6fc; --card: #ffffff; --ink: #0b1a3d; --muted: #56617c; --line: #d3dbee;
+  --bg: #e9effb; --card: #ffffff; --ink: #0b1a3d; --muted: #56617c; --line: #d3dbee;
   --accent: #123fa8; --accent-ink: #ffffff; --trim: #d42a33;
-  --stripe: linear-gradient(90deg, #123fa8 0 33.3%, #ffffff 33.3% 66.6%, #d42a33 66.6%);
+  --stripe: linear-gradient(90deg, #0b2a7a 0 33.3%, #ffffff 33.3% 66.6%, #d42a33 66.6%);
+  --band: #123fa8; --band-ink: #ffffff; --band-muted: #c9d6f7; --band-trim: #ff8f95; --tint: #dbe5fb; --tint-line: #c3d2f5;
   --imp: #123fa8; --pc: #c0262f;
   --good: #15803d; --good-bg: #dcfce7; --bad: #b91c1c; --bad-bg: #fde4e4;
   color-scheme: light;
@@ -40,6 +41,7 @@
     --bg: #0a1330; --card: #111c43; --ink: #eef2fb; --muted: #9aa7c7; --line: #26366a;
     --accent: #7f9cff; --accent-ink: #0a1330; --trim: #ff5d65;
     --stripe: linear-gradient(90deg, #3d64e0 0 33.3%, #eef2fb 33.3% 66.6%, #ff5d65 66.6%);
+    --band: #1b3080; --band-ink: #ffffff; --band-muted: #b9c7f0; --band-trim: #ff8f95; --tint: #15235a; --tint-line: #2a3d7c;
     --imp: #8fadff; --pc: #ff7d84;
     --good: #86efac; --good-bg: #123323; --bad: #fca5a5; --bad-bg: #3d1a24;
     color-scheme: dark;
@@ -49,6 +51,7 @@
   --bg: #0a1330; --card: #111c43; --ink: #eef2fb; --muted: #9aa7c7; --line: #26366a;
   --accent: #7f9cff; --accent-ink: #0a1330; --trim: #ff5d65;
   --stripe: linear-gradient(90deg, #3d64e0 0 33.3%, #eef2fb 33.3% 66.6%, #ff5d65 66.6%);
+  --band: #1b3080; --band-ink: #ffffff; --band-muted: #b9c7f0; --band-trim: #ff8f95; --tint: #15235a; --tint-line: #2a3d7c;
   --imp: #8fadff; --pc: #ff7d84;
   --good: #86efac; --good-bg: #123323; --bad: #fca5a5; --bad-bg: #3d1a24;
   color-scheme: dark;
@@ -203,3 +206,41 @@ h1 .ou { color: var(--trim); }
 .prefs select { font: inherit; font-size: .8rem; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; }
 :root[data-theme="classic"] .card { border-top-width: 1px; border-top-color: var(--line); }
 :root[data-theme="classic"] .hubcard { border-left-width: 1px; border-left-color: var(--line); }
+
+/* ---------- House: blue header band and tinted panels */
+:root[data-theme="house"] nav.site {
+  background: var(--band); margin-bottom: 0; padding: 12px 18px 6px; border-radius: 14px 14px 0 0;
+}
+:root[data-theme="house"] nav.site::after { display: none; }
+:root[data-theme="house"] nav.site a { color: var(--band-muted); }
+:root[data-theme="house"] nav.site a:hover { color: var(--band-ink); }
+:root[data-theme="house"] nav.site a[aria-current] { color: var(--band-ink); box-shadow: inset 0 -2px 0 var(--band-trim); }
+:root[data-theme="house"] main > header {
+  position: relative; overflow: hidden; background: var(--band); color: var(--band-ink);
+  padding: 12px 18px 22px; margin-bottom: 18px; border-radius: 0 0 14px 14px;
+}
+:root[data-theme="house"] main > header::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--stripe); }
+:root[data-theme="house"] main > header h1 { color: var(--band-ink); }
+:root[data-theme="house"] main > header h1 .ou { color: var(--band-trim); }
+:root[data-theme="house"] main > header .intro,
+:root[data-theme="house"] main > header .deckinfo,
+:root[data-theme="house"] main > header .check,
+:root[data-theme="house"] main > header .lesson label { color: var(--band-muted); }
+:root[data-theme="house"] main > header .deckinfo { margin: 0; }
+:root[data-theme="house"] main > header .controls:last-child,
+:root[data-theme="house"] main > header .intro:last-child { margin-bottom: 0; }
+:root[data-theme="house"] main > header .seg { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .35); }
+:root[data-theme="house"] main > header .seg button { color: var(--band-ink); }
+:root[data-theme="house"] main > header .seg button + button { border-left-color: rgba(255, 255, 255, .35); }
+:root[data-theme="house"] main > header .seg button.on { background: #ffffff; color: #123fa8; font-weight: 600; }
+:root[data-theme="house"] .prefs select,
+:root[data-theme="house"] main > header .lesson select { background: #ffffff; color: #0b1a3d; border-color: transparent; }
+:root[data-theme="house"] .stat,
+:root[data-theme="house"] .rules,
+:root[data-theme="house"] .ctx { background: var(--tint); border-color: var(--tint-line); }
+:root[data-theme="house"] .rules summary,
+:root[data-theme="house"] .stat span { color: var(--accent); }
+:root[data-theme="house"] .stat b.t-all { color: var(--accent); }
+:root[data-theme="house"] .hubcard b { color: var(--accent); }
+:root[data-theme="house"] .hubcard { border-color: var(--tint-line); border-left-color: var(--accent); }
+:root[data-theme="house"] footer { color: var(--accent); opacity: .8; }
